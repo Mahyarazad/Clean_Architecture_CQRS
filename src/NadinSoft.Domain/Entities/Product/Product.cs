@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using NadinSoft.Domain.Primitives;
-using System;
 
 namespace NadinSoft.Domain.Entities.Product
 {
@@ -11,10 +10,6 @@ namespace NadinSoft.Domain.Entities.Product
         public string ManufactureEmail { get; private set; }
         public string ManufacturePhone { get;  private set; }
         public bool IsAvailable { get; private set; }
-        public Product()
-        {
-            
-        }
 
         private Product(Guid id, string name, string manufactureEmail, string manufacturePhone) : base(id)
         {
@@ -29,6 +24,14 @@ namespace NadinSoft.Domain.Entities.Product
         {
             var product = new Product(Guid.NewGuid(), name, manufactureEmail, manufacturePhone);
             return Result.Ok(product);
+        }
+
+        public Result<Product> Update(string name, string manufactureEmail, string manufacturePhone)
+        {
+            Name = name;
+            ManufactureEmail = manufactureEmail;
+            ManufacturePhone = manufacturePhone;
+            return Result.Ok(this);
         }
 
         public Result<Product> SoftDelete()
