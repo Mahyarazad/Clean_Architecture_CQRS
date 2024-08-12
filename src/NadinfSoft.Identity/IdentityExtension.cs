@@ -50,9 +50,6 @@ namespace NadinfSoft.Identity
                     };
                 }); ;
 
-            //builder = new IdentityBuilder(builder.UserType, builder.Services);
-            //builder.AddEntityFrameworkStores<UserDbContext>();
-            //builder.AddSignInManager<SignInManager<ApplicationUser>>();
 
 
             services.AddScoped<IAuthService, AuthService>();
