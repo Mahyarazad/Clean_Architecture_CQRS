@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using NadinSoft.Domain.Abstractions.Persistence.Data;
 using NadinSoft.Domain.Abstractions.Persistence.Repositories;
 using NadinSoft.Persistence.Data;
+using NadinSoft.Persistence.Profiles;
 using NadinSoft.Persistence.Repositories;
+using System.Reflection;
 
 namespace NadinSoft.Persistence
 {
@@ -16,6 +18,8 @@ namespace NadinSoft.Persistence
             {
                 options.UseSqlServer(configuration.GetConnectionString("MSSqlServer"));
             });
+
+            services.AddAutoMapper(Assembly.GetAssembly(typeof(IProfile)));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProductRepository, ProductRepository>();
             return services;

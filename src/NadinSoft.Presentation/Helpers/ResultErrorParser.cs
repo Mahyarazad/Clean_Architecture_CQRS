@@ -1,11 +1,11 @@
 ﻿using FluentResults;
-using NadinSoft.Domain.Entities.Product;
+using NadinSoft.Application.Features.Products;
 
 namespace NadinSoft.Presentation.Helpers
 {
     public static class ResultErrorParser
     {
-        public static object ParseResultError(Result<Product> result)
+        public static object ParseResultError(Result<ProductDTO> result)
         {
             return new
             {

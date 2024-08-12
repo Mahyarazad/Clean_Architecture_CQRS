@@ -8,7 +8,7 @@ namespace NadinSoft.Domain.Entities.Product
         public string Name { get; private set; }
         public DateTime ProductDate { get; private set; }
         public string ManufactureEmail { get; private set; }
-        public string ManufacturePhone { get;  private set; }
+        public string? ManufacturePhone { get;  private set; }
         public bool IsAvailable { get; private set; }
 
         private Product(Guid id, string name, string manufactureEmail, string manufacturePhone) : base(id)
