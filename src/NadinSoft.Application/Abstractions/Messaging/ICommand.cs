@@ -3,7 +3,7 @@ using MediatR;
 
 namespace NadinSoft.Application.Abstractions.Messaging
 {
-    public interface ICommand<TResponse> : IRequest<Result<TResponse>>
+    public interface ICommand<out TResponse> : IRequest<TResponse>
     {
     }
 }
