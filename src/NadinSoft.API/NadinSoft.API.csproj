@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NadinfSoft.Identity\NadinfSoft.Identity.csproj" />
     <ProjectReference Include="..\NadinSoft.Application\NadinSoft.Application.csproj" />
     <ProjectReference Include="..\NadinSoft.Persistence\NadinSoft.Persistence.csproj" />
     <ProjectReference Include="..\NadinSoft.Presentation\NadinSoft.Presentation.csproj" />

@@ -3,9 +3,12 @@ using NadinSoft.Application;
 using NadinSoft.Persistence;
 using NadinSoft.Persistence.Data;
 using NadinSoft.Presentation.Configuration.Extensions.Swagger;
+using NadinfSoft.Identity;
+using NadinfSoft.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddApplicationDependencies();
 builder.Services.AddControllers();
 builder.Services.AddPersistenceDependencies(builder.Configuration)
@@ -20,6 +23,12 @@ if(app.Environment.IsDevelopment())
     using(var scope = app.Services.CreateScope())
     {
         using(var context = scope.ServiceProvider.GetService<ApplicationDbContext>()) 
+        {
+            context!.Database.Migrate();
+            context!.Database.EnsureCreated();
+        }
+
+        using(var context = scope.ServiceProvider.GetService<UserDbContext>())
         {
             context!.Database.Migrate();
             context!.Database.EnsureCreated();
