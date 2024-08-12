@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 namespace NadinSoft.Presentation.Configuration.Extensions.Swagger
 {
@@ -7,9 +8,32 @@ namespace NadinSoft.Presentation.Configuration.Extensions.Swagger
     {
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
-            services.AddSwaggerGen( options =>
+            services.AddSwaggerGen( config =>
             {
-                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "NadinSoft", Version = "v1"});
+                config.SwaggerDoc("v1", new OpenApiInfo() { Title = "NadinSoft", Version = "v1"});
+                config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    In = ParameterLocation.Header,
+                    BearerFormat = "JWT",
+                    Description = "Please enter token",
+                });
+
+                config.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme {
+                            Reference = new OpenApiReference {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+
             });
             return services;
         }
