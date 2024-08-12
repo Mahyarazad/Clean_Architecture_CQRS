@@ -26,7 +26,7 @@ namespace NadinSoft.Presentation.Controllers
             }
             else
             {
-                return BadRequest(ResultErrorParser.ParseResultError(result));
+                return BadRequest(ResultErrorParser.ParseResultError(result.Errors));
             }
         }
     }

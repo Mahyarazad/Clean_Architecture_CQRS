@@ -1,15 +1,14 @@
 ﻿using FluentResults;
-using NadinSoft.Application.Features.Products;
 
 namespace NadinSoft.Presentation.Helpers
 {
     public static class ResultErrorParser
     {
-        public static object ParseResultError(Result<ProductDTO> result)
+        public static object ParseResultError(List<IError> errors)
         {
             return new
             {
-                Errors = result.Reasons.Select(x => x.Message).ToList()
+                Errors = errors.Select(x => x.Message).ToList()
             };
         }
     }
