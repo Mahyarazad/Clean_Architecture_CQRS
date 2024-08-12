@@ -8,11 +8,11 @@ using NadinfSoft.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddIdentityServices(builder.Configuration);
-builder.Services.AddApplicationDependencies();
 builder.Services.AddControllers();
-builder.Services.AddPersistenceDependencies(builder.Configuration)
-    .AddSwagger();
+builder.Services.AddApplicationDependencies()
+                .AddPersistenceDependencies(builder.Configuration)
+                .AddIdentityServices(builder.Configuration)
+                .AddSwagger();
 
 var app = builder.Build();
 
@@ -41,7 +41,7 @@ else
     app.UseHsts();
 }
 
-
+app.UseIdentity();
 app.UseHttpsRedirection();
 app.UseSwaggerDocumentation();
 

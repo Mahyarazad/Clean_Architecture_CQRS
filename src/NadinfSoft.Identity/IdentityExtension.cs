@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using NadinSoft.Application.Abstractions.Identity;
+using NadinfSoft.Identity.Services;
 
 namespace NadinfSoft.Identity
 {
@@ -20,9 +22,13 @@ namespace NadinfSoft.Identity
                 options.UseSqlServer(configuration.GetConnectionString("IdentityServer"));
             });
 
-            services.AddIdentityCore<ApplicationUser>()
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+
+            IdentityBuilder builder = services.AddIdentityCore<ApplicationUser>()
                 .AddEntityFrameworkStores<UserDbContext>()
+                .AddSignInManager<SignInManager<ApplicationUser>>()
                 .AddDefaultTokenProviders();
+
 
             services.AddAuthentication(options =>
             {
@@ -38,11 +44,19 @@ namespace NadinfSoft.Identity
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidAudience = configuration["JWT:ValidAudience"],
-                        ValidIssuer = configuration["JWT:ValidIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+                        ValidAudience = configuration["JwtSettings:Audience"],
+                        ValidIssuer = configuration["JwtSettings:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Secret"]))
                     };
                 }); ;
+
+            //builder = new IdentityBuilder(builder.UserType, builder.Services);
+            //builder.AddEntityFrameworkStores<UserDbContext>();
+            //builder.AddSignInManager<SignInManager<ApplicationUser>>();
+
+
+            services.AddScoped<IAuthService, AuthService>();
+
             return services;
         }
 
