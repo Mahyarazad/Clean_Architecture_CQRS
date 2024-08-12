@@ -46,6 +46,7 @@ namespace NadinfSoft.Identity
                         ValidateAudience = true,
                         ValidAudience = configuration["JwtSettings:Audience"],
                         ValidIssuer = configuration["JwtSettings:Issuer"],
+                        // Use Symmetric key for simplcity
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Secret"]))
                     };
                 }); ;

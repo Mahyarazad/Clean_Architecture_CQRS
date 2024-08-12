@@ -101,6 +101,19 @@ namespace NadinfSoft.Identity.Services
                 new Claim("Role", "User"),
            }.Union(userClaims);
 
+            // Uses the same secret key for both encryption and decryption.
+            // This key can be a password, code, or a random string of letters or numbers.
+            // Symmetric encryption is faster and easier to use than asymmetric encryption,
+            // but it's less secure because if the key is compromised, the data can be easily decrypted.
+
+            //Asymmetric encryption
+            //Uses two different keys, a public key for encryption and a private key for decryption.
+            //Asymmetric encryption may be more suitable for situations where data is exchanged between
+            //two independent parties
+
+            // found the implementation 
+            //https://stefanescueduard.github.io/2020/04/25/jwt-authentication-with-asymmetric-encryption-in-asp-dotnet-core/
+
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings!.Secret));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
