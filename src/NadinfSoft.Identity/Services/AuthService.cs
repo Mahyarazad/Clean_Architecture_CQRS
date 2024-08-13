@@ -82,7 +82,7 @@ namespace NadinfSoft.Identity.Services
                 return Result.Ok(new RegisterCommandResult(user.Id));
             }
 
-            return Result.Fail(new Error(string.Join(", ", identityResult.Errors)));
+            return Result.Fail(identityResult.Errors.Select(x=> x.Description).ToArray());
 
         }
 
