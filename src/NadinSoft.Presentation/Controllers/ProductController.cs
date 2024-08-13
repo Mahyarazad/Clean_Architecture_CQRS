@@ -33,7 +33,7 @@ namespace NadinSoft.Presentation.Controllers
             return BadRequest(ResultErrorParser.ParseResultError(result.Errors));
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateProduct(UpdateProductCommand command, CancellationToken cancellationToken)
         {
             var result = await _sender.Send(command, cancellationToken);
