@@ -31,8 +31,8 @@ namespace NadinSoft.Application.Features.Products.Commands.DeleteProduct
             if(validationResult.IsValid)
             {
                 if(!await _productRepository.AnyAsync(request.Id))
-                {
-                    return Result.Fail(new[] { HttpStatusCode.NotFound.ToString() });
+                {   
+                    return Result.Fail(HttpStatusCode.NotFound.ToString());
                 }
 
                 var username = _contextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Uid");
@@ -40,24 +40,24 @@ namespace NadinSoft.Application.Features.Products.Commands.DeleteProduct
 
                 if(username is null)
                 {
-                    return Result.Fail(new[] { HttpStatusCode.Unauthorized.ToString() });
+                    return Result.Fail(HttpStatusCode.Unauthorized.ToString());
                 }
 
                 _ = Guid.TryParse(username.Value.ToString(), out Guid userId);
                 if(!await _productRepository.DoesUserOwnThisProductAsync(request.Id, userId, cancellationToken))
                 {
-                    return Result.Fail(new[] { HttpStatusCode.Forbidden.ToString() });
+                    return Result.Fail(HttpStatusCode.Forbidden.ToString());
                 }
 
                 
                 var deleteResult = await _productRepository.DeleteAsync(request.Id, cancellationToken);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-                return Result.Fail(new[] { HttpStatusCode.Forbidden.ToString() });
+                return Result.Fail(HttpStatusCode.Forbidden.ToString());
 
             }
 
-            return Result.Fail(new[] { HttpStatusCode.BadRequest.ToString() });
+            return Result.Fail(HttpStatusCode.BadRequest.ToString());
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NadinSoft.Application.Features.Products.Commands.CreateProduct;
 using NadinSoft.Application.Features.Products.Commands.DeleteProduct;
 using NadinSoft.Application.Features.Products.Commands.UpdateProduct;
@@ -65,6 +64,21 @@ namespace NadinSoft.Presentation.Controllers
             if(result.IsSuccess)
             {
                 return Ok(HttpStatusCode.Accepted);
+            }
+
+            if(result.HasError(x => x.Message == HttpStatusCode.Unauthorized.ToString()))
+            {
+                return Unauthorized();
+            }
+
+            if(result.HasError(x => x.Message == HttpStatusCode.Forbidden.ToString()))
+            {
+                return Forbid();
+            }
+
+            if(result.HasError(x => x.Message == HttpStatusCode.NotFound.ToString()))
+            {
+                return NotFound();
             }
 
             return BadRequest(result.Errors);
