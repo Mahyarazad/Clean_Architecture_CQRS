@@ -6,8 +6,8 @@ namespace NadinSoft.Application.Features.Products.Commands.CreateProduct
     {
         public CreateProductCommandValidator()
         {
-            RuleFor(p => p.Name).NotEmpty();
-            RuleFor(p=> p.ManufactureEmail).NotEmpty().EmailAddress();
+            RuleFor(p => p.Name).NotEmpty().MaximumLength(128); ;
+            RuleFor(p=> p.ManufacturePhone).MaximumLength(128); ;
         }
     }
 }
