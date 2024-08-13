@@ -47,7 +47,7 @@ namespace NadinSoft.Application.Features.Products.Commands.UpdateProduct
                 _ = Guid.TryParse(username.Value.ToString(), out Guid userId);
                 if(!await _productRepository.DoesUserOwnThisProductAsync(request.Id, userId, cancellationToken))
                 {
-                    return Result.Fail($"This user doesn't own this product wwith the requested {request.Id}");
+                    return Result.Fail($"This user doesn't own this product with the requested Id: {request.Id}");
                 }
 
                 var existingProduct = await _productRepository.GetByIdAsync(request.Id, cancellationToken);

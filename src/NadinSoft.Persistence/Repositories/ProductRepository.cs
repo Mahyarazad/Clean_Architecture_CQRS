@@ -46,7 +46,7 @@ namespace NadinSoft.Persistence.Repositories
             return _context.Set<Product>().AnyAsync(x => x.Id == productId);
         }
 
-        public async Task<List<Product>> GetProductListAsync(string? nameFilter, string? manufactureEmailFilter, string? phoneFilter, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Product>> GetProductListAsync(string? nameFilter, string? manufactureEmailFilter, string? phoneFilter, CancellationToken cancellationToken)
         {
             // We can refactor this block of code and use specification pattern
             var query = _context.Set<Product>().AsQueryable();
