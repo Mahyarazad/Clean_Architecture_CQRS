@@ -24,9 +24,9 @@ namespace NadinSoft.Persistence.Repositories
             return await _context.Set<Product>().FirstOrDefaultAsync(p => p.Id == productId, cancellationToken);
         }
 
-        public Task SoftDeleteAsync(Guid productId, CancellationToken cancellationToken = default)
+        public async Task<int> DeleteAsync(Guid productId, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await _context.Set<Product>().Where(p => p.Id == productId).ExecuteDeleteAsync();
         }
 
         public Task UpdateAsync(Product value, CancellationToken cancellationToken = default)
@@ -34,7 +34,6 @@ namespace NadinSoft.Persistence.Repositories
             _context.Set<Product>().Update(value);
            return Task.CompletedTask;
         }
-
 
         public Task<bool> DoesUserOwnThisProductAsync(Guid productId, Guid userId, CancellationToken cancellationToken = default)
         {

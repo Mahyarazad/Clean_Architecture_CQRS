@@ -1,10 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NadinSoft.Application.Features.Products.Commands.CreateProduct;
+using NadinSoft.Application.Features.Products.Commands.DeleteProduct;
 using NadinSoft.Application.Features.Products.Commands.UpdateProduct;
 using NadinSoft.Application.Features.Products.Queries.GetProducts;
 using NadinSoft.Presentation.Helpers;
+using System.Net;
 
 namespace NadinSoft.Presentation.Controllers
 {
@@ -47,14 +50,24 @@ namespace NadinSoft.Presentation.Controllers
         [HttpGet("get-product-list")]
         public async Task<IActionResult> GetProductList(string? nameFilter, string? manufactureEmailFilter, string? phoneFilter, CancellationToken cancellationToken)
         {
-            var query = new GetProductListQuery(nameFilter, manufactureEmailFilter, phoneFilter);
-            var result = await _sender.Send(query, cancellationToken);
-            if(result.Any())
+            var result = await _sender.Send(new GetProductListQuery(nameFilter, manufactureEmailFilter, phoneFilter), cancellationToken);
+            return Ok(new 
+            { 
+                TotalCount = result.Count(), 
+                Items = result 
+            });
+        }
+
+        [HttpDelete("hard-delete")]
+        public async Task<IActionResult> DeleteProduct(DeleteProductCommand command, CancellationToken cancellationToken)
+        {
+            var result =  await _sender.Send(command, cancellationToken);
+            if(result.IsSuccess)
             {
-                return Ok(new { TotalCount = result.Count(), Items = result });
+                return Ok(HttpStatusCode.Accepted);
             }
 
-            return NoContent();
+            return BadRequest(result.Errors);
         }
     }
 }
