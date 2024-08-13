@@ -2,15 +2,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace NadinSoft.Presentation.Configuration.Extensions.Swagger
+namespace NadinSoft.Presentation.Configuration
 {
     public static class SwaggerExtension
     {
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
-            services.AddSwaggerGen( config =>
+            services.AddSwaggerGen(config =>
             {
-                config.SwaggerDoc("v1", new OpenApiInfo() { Title = "NadinSoft", Version = "v1"});
+                config.SwaggerDoc("v1", new OpenApiInfo() { Title = "NadinSoft", Version = "v1" });
                 config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",

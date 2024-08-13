@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using NadinSoft.Application;
 using NadinSoft.Persistence;
 using NadinSoft.Persistence.Data;
-using NadinSoft.Presentation.Configuration.Extensions.Swagger;
 using NadinfSoft.Identity;
 using NadinfSoft.Identity.Data;
+using NadinSoft.Presentation.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddApplicationDependencies()
                 .AddPersistenceDependencies(builder.Configuration)
                 .AddIdentityServices(builder.Configuration)
-                .AddSwagger();
+                .AddSwagger()
+                .AddHttpConetxt();
 
 var app = builder.Build();
 
@@ -44,6 +45,7 @@ else
 app.UseIdentity();
 app.UseHttpsRedirection();
 app.UseSwaggerDocumentation();
+
 
 app.MapControllers();
 
