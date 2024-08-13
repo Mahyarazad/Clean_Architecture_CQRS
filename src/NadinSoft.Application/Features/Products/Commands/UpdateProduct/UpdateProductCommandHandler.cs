@@ -8,7 +8,7 @@ using NadinSoft.Domain.Abstractions.Persistence.Data;
 using NadinSoft.Domain.Abstractions.Persistence.Repositories;
 namespace NadinSoft.Application.Features.Products.Commands.UpdateProduct
 {
-    public class UpdateProductHandler : ICommandHandler<UpdateProductCommand, Result<ProductDTO>>
+    public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand, Result<ProductDTO>>
     {
         private readonly IProductRepository _productRepository;
         private readonly IValidator<UpdateProductCommand> _validator;
@@ -16,7 +16,7 @@ namespace NadinSoft.Application.Features.Products.Commands.UpdateProduct
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UpdateProductHandler(IProductRepository productRepository, IValidator<UpdateProductCommand> validator, IHttpContextAccessor contextAccessor, IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateProductCommandHandler(IProductRepository productRepository, IValidator<UpdateProductCommand> validator, IHttpContextAccessor contextAccessor, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _productRepository = productRepository;
             _validator = validator;

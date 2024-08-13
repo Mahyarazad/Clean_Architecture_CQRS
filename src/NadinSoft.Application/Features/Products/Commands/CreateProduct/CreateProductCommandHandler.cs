@@ -10,7 +10,7 @@ using NadinSoft.Domain.Entities.Product;
 
 namespace NadinSoft.Application.Features.Products.Commands.CreateProduct
 {
-    public class CreateProductHandler : ICommandHandler<CreateProductCommand, Result<ProductDTO>>
+    public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, Result<ProductDTO>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProductRepository _productRepository;
@@ -18,7 +18,7 @@ namespace NadinSoft.Application.Features.Products.Commands.CreateProduct
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public CreateProductHandler(IUnitOfWork unitOfWork, IProductRepository productRepository, IValidator<CreateProductCommand> validator, IMapper mapper, IHttpContextAccessor contextAccessor)
+        public CreateProductCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository, IValidator<CreateProductCommand> validator, IMapper mapper, IHttpContextAccessor contextAccessor)
         {
             _unitOfWork = unitOfWork;
             _productRepository = productRepository;
