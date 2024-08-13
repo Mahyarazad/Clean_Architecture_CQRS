@@ -17,6 +17,7 @@ namespace NadinSoft.Persistence.Configurtions
             builder.Property(p => p.ManufacturePhone).HasMaxLength(128);
 
             builder.HasIndex(p => new { p.ManufactureEmail, p.ProductDate }, "UniqueIndex_MEmail_PDate").IsUnique(true);
+            builder.HasQueryFilter(p => p.IsAvailable);
         }
     }
 }

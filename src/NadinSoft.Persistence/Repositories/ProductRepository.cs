@@ -1,5 +1,4 @@
-﻿using FluentResults;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NadinSoft.Domain.Abstractions.Persistence.Repositories;
 using NadinSoft.Domain.Entities.Product;
 using NadinSoft.Persistence.Data;
@@ -18,11 +17,6 @@ namespace NadinSoft.Persistence.Repositories
         public async Task AddAsync(Product value, CancellationToken cancellationToken = default)
         {
             await _context.Set<Product>().AddAsync(value, cancellationToken);
-        }
-
-        public Task<List<Product>> GetAllProductsAsync(CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<Product?> GetByIdAsync(Guid productId, CancellationToken cancellationToken = default)
@@ -50,6 +44,29 @@ namespace NadinSoft.Persistence.Repositories
         public Task<bool> AnyAsync(Guid productId, CancellationToken cancellationToken = default)
         {
             return _context.Set<Product>().AnyAsync(x => x.Id == productId);
+        }
+
+        public async Task<List<Product>> GetProductListAsync(string? nameFilter, string? manufactureEmailFilter, string? phoneFilter, CancellationToken cancellationToken)
+        {
+            // We can refactor this block of code and use specification pattern
+            var query = _context.Set<Product>().AsQueryable();
+
+            if(!string.IsNullOrWhiteSpace(nameFilter))
+            {
+                query = query.Where(p => p.Name.ToLower().Contains(nameFilter.ToLower()));
+            }
+
+            if(!string.IsNullOrWhiteSpace(manufactureEmailFilter))
+            {
+                query = query.Where(p => p.ManufactureEmail.ToLower().Contains(manufactureEmailFilter.ToLower()));
+            }
+
+            if(!string.IsNullOrWhiteSpace(phoneFilter))
+            {
+                query = query.Where(p => p.ManufactureEmail.ToLower().Contains(phoneFilter.ToLower()));
+            }
+
+            return await query.ToListAsync(cancellationToken);
         }
     }
 }

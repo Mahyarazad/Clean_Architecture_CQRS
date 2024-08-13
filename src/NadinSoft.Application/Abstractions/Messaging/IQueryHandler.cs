@@ -1,9 +1,8 @@
-﻿using FluentResults;
-using MediatR;
+﻿using MediatR;
 
 namespace NadinSoft.Application.Abstractions.Messaging
 {
-    internal interface IQueryHandler<in TRequest, TResponse> : IRequestHandler<TRequest, TResponse> where TRequest : IQuery<TResponse>
+    internal interface IQueryHandler<in TQuery, TResponse> : IRequestHandler<TQuery, TResponse> where TQuery : IQuery<TResponse>
     {
     }
 }

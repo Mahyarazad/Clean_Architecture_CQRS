@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NadinSoft.Application.Features.Products.Commands.CreateProduct;
 using NadinSoft.Application.Features.Products.Commands.UpdateProduct;
+using NadinSoft.Application.Features.Products.Queries.GetProducts;
 using NadinSoft.Presentation.Helpers;
 
 namespace NadinSoft.Presentation.Controllers
 {
     [ApiController]
-   
+    [Authorize]
     [Route("api/v1/products")]
     public class ProductController : ControllerBase
     {
@@ -18,7 +19,6 @@ namespace NadinSoft.Presentation.Controllers
             _sender = sender;
         }
 
-        [Authorize]
         [HttpPost("add")]
         public async Task<IActionResult> AddProduct(CreateProductCommand command, CancellationToken cancellationToken)
         {
@@ -27,13 +27,10 @@ namespace NadinSoft.Presentation.Controllers
             {
                 return Created("/", result.Value);
             }
-            else
-            {
-                return BadRequest(ResultErrorParser.ParseResultError(result.Errors));
-            }
+
+            return BadRequest(ResultErrorParser.ParseResultError(result.Errors));
         }
 
-        [Authorize]
         [HttpPost("update")]
         public async Task<IActionResult> UpdateProduct(UpdateProductCommand command, CancellationToken cancellationToken)
         {
@@ -42,10 +39,22 @@ namespace NadinSoft.Presentation.Controllers
             {
                 return Ok(result.Value);
             }
-            else
+
+            return BadRequest(ResultErrorParser.ParseResultError(result.Errors));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("get-product-list")]
+        public async Task<IActionResult> GetProductList(string? nameFilter, string? manufactureEmailFilter, string? phoneFilter, CancellationToken cancellationToken)
+        {
+            var query = new GetProductListQuery(nameFilter, manufactureEmailFilter, phoneFilter);
+            var result = await _sender.Send(query, cancellationToken);
+            if(result.Any())
             {
-                return BadRequest(ResultErrorParser.ParseResultError(result.Errors));
+                return Ok(new { TotalCount = result.Count(), Items = result });
             }
+
+            return NoContent();
         }
     }
 }
