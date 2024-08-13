@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentResults;
+using Microsoft.EntityFrameworkCore;
 using NadinSoft.Domain.Abstractions.Persistence.Repositories;
 using NadinSoft.Domain.Entities.Product;
 using NadinSoft.Persistence.Data;
@@ -24,7 +25,7 @@ namespace NadinSoft.Persistence.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Product> GetByIdAsync(Guid productId, CancellationToken cancellationToken = default)
+        public async Task<Product?> GetByIdAsync(Guid productId, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Product>().FirstOrDefaultAsync(p => p.Id == productId, cancellationToken);
         }
@@ -34,9 +35,21 @@ namespace NadinSoft.Persistence.Repositories
             throw new NotImplementedException();
         }
 
-        public void UpdateAsync(Product value, CancellationToken cancellationToken = default)
+        public Task UpdateAsync(Product value, CancellationToken cancellationToken = default)
         {
             _context.Set<Product>().Update(value);
+           return Task.CompletedTask;
+        }
+
+
+        public Task<bool> DoesUserOwnThisProductAsync(Guid productId, Guid userId, CancellationToken cancellationToken = default)
+        {
+            return _context.Set<Product>().AnyAsync(p => p.Id == productId && p.UserId == userId, cancellationToken);
+        }
+
+        public Task<bool> AnyAsync(Guid productId, CancellationToken cancellationToken = default)
+        {
+            return _context.Set<Product>().AnyAsync(x => x.Id == productId);
         }
     }
 }
