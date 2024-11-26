@@ -5,6 +5,7 @@ namespace NadinSoft.Domain.Entities.Product
 {
     public class Product : BaseEntity
     {
+        public Product() { }
         public string Name { get; private set; }
         public DateTime ProductDate { get; private set; }
         public string ManufactureEmail { get; private set; }

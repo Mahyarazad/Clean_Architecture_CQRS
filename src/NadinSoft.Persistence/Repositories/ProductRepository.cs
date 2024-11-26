@@ -1,18 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
+using NadinSoft.Application.Abstractions.Data;
 using NadinSoft.Domain.Abstractions.Persistence.Repositories;
 using NadinSoft.Domain.Entities.Product;
 using NadinSoft.Persistence.Data;
 
 namespace NadinSoft.Persistence.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository(ApplicationDbContext context, IDapperService dapper) : IProductRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public ProductRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
+        private readonly IDapperService _dapper = dapper;
 
         public async Task AddAsync(Product value, CancellationToken cancellationToken = default)
         {
@@ -45,27 +43,23 @@ namespace NadinSoft.Persistence.Repositories
             return _context.Set<Product>().AnyAsync(x => x.Id == productId);
         }
 
-        public async Task<IEnumerable<Product>> GetProductListAsync(string? nameFilter, string? manufactureEmailFilter, string? phoneFilter, CancellationToken cancellationToken)
+
+        public async Task<IEnumerable<Product>> GetProductListAsync(
+            int pageNumber, int pageSize,
+            string? nameFilter, string? manufactureEmailFilter, string? phoneFilter)
         {
-            // We can refactor this block of code and use specification pattern
-            var query = _context.Set<Product>().AsQueryable();
 
-            if(!string.IsNullOrWhiteSpace(nameFilter))
-            {
-                query = query.Where(p => p.Name.ToLower().Contains(nameFilter.ToLower()));
-            }
+            var parameters = new DynamicParameters();
+            parameters.Add("PageNumber", pageNumber, System.Data.DbType.Int16, System.Data.ParameterDirection.Input);
+            parameters.Add("PageSize", pageSize, System.Data.DbType.Int16, System.Data.ParameterDirection.Input);
+            parameters.Add("NameFilter", nameFilter, System.Data.DbType.String, System.Data.ParameterDirection.Input);
+            parameters.Add("ManufactureEmailFilter", manufactureEmailFilter, System.Data.DbType.String, System.Data.ParameterDirection.Input);
+            parameters.Add("PhoneFilter", phoneFilter, System.Data.DbType.String, System.Data.ParameterDirection.Input);
 
-            if(!string.IsNullOrWhiteSpace(manufactureEmailFilter))
-            {
-                query = query.Where(p => p.ManufactureEmail.ToLower().Contains(manufactureEmailFilter.ToLower()));
-            }
 
-            if(!string.IsNullOrWhiteSpace(phoneFilter))
-            {
-                query = query.Where(p => p.ManufactureEmail.ToLower().Contains(phoneFilter.ToLower()));
-            }
-
-            return await query.ToListAsync(cancellationToken);
+            using var connection = _dapper.CreateConnection();
+            return await  connection.QueryAsync<Product>("GetFilteredDataWithPagination", parameters, commandType: System.Data.CommandType.StoredProcedure);
         }
+
     }
 }

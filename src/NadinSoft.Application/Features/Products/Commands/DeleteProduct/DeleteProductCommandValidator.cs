@@ -6,7 +6,7 @@ namespace NadinSoft.Application.Features.Products.Commands.DeleteProduct
     {
         public DeleteProductCommandValidator()
         {
-            RuleFor(p => p.Id).NotEmpty();
+            RuleFor(p => p.Id).NotEmpty().WithMessage("Id is required");
         }
     }
 }

@@ -6,6 +6,7 @@ using NadinSoft.Application.Features.Products.Commands.DeleteProduct;
 using NadinSoft.Application.Features.Products.Commands.UpdateProduct;
 using NadinSoft.Application.Features.Products.Queries.GetProducts;
 using NadinSoft.Presentation.Helpers;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace NadinSoft.Presentation.Controllers
@@ -47,9 +48,13 @@ namespace NadinSoft.Presentation.Controllers
 
         [AllowAnonymous]
         [HttpGet("get-product-list")]
-        public async Task<IActionResult> GetProductList(string? nameFilter, string? manufactureEmailFilter, string? phoneFilter, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProductList(
+            [FromQuery, Required] int pageNumber,
+            [FromQuery, Required] int pageSize,
+            string? nameFilter, string? manufactureEmailFilter
+            , string? phoneFilter, CancellationToken cancellationToken)
         {
-            var result = await _sender.Send(new GetProductListQuery(nameFilter, manufactureEmailFilter, phoneFilter), cancellationToken);
+            var result = await _sender.Send(new GetProductListQuery(pageNumber, pageSize, nameFilter, manufactureEmailFilter, phoneFilter), cancellationToken);
             return Ok(new 
             { 
                 TotalCount = result.Count(), 

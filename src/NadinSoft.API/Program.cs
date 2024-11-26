@@ -5,6 +5,7 @@ using NadinSoft.Persistence.Data;
 using NadinfSoft.Identity;
 using NadinfSoft.Identity.Data;
 using NadinSoft.Presentation.Configuration;
+using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,14 @@ builder.Services.AddApplicationDependencies()
                 .AddIdentityServices(builder.Configuration)
                 .AddSwagger()
                 .AddHttpConetxt();
+
+builder.Services.AddResponseCompression(options => 
+{
+        options.Providers.Add<GzipCompressionProvider>();
+        options.EnableForHttps = true;  
+});
+
+builder.Services.Configure<GzipCompressionProviderOptions>(o => o.Level = System.IO.Compression.CompressionLevel.SmallestSize);
 
 var app = builder.Build();
 

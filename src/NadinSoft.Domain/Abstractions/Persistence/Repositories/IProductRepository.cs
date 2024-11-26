@@ -7,7 +7,8 @@ namespace NadinSoft.Domain.Abstractions.Persistence.Repositories
     {
         Task AddAsync(Product value, CancellationToken cancellationToken = default);
         Task<Product?> GetByIdAsync(Guid productId, CancellationToken cancellationToken = default);
-        Task<IEnumerable<Product>> GetProductListAsync(string? nameFilter, string? manufactureEmailFilter, string? phoneFilter, CancellationToken cancellationToken = default);
+        Task<IEnumerable<Product>> GetProductListAsync(int pageNumber, int pageSize,
+            string? nameFilter, string? manufactureEmailFilter, string? phoneFilter);
         Task UpdateAsync(Product value, CancellationToken cancellationToken = default);
         Task<int> DeleteAsync(Guid productId, CancellationToken cancellationToken = default);
         Task<bool> DoesUserOwnThisProductAsync(Guid productId,Guid userId ,CancellationToken cancellationToken = default);

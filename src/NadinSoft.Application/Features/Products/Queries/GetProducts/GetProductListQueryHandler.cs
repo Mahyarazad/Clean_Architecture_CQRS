@@ -2,6 +2,7 @@
 using MediatR;
 using NadinSoft.Application.Abstractions.Messaging;
 using NadinSoft.Domain.Abstractions.Persistence.Repositories;
+using System.Linq;
 
 namespace NadinSoft.Application.Features.Products.Queries.GetProducts
 {
@@ -18,7 +19,9 @@ namespace NadinSoft.Application.Features.Products.Queries.GetProducts
 
         public async Task<IEnumerable<ProductDTO>> Handle(GetProductListQuery request, CancellationToken cancellationToken)
         {
-            var repoResult = await _productRepository.GetProductListAsync(request.NameFilter, request.ManufactureEmailFilter, request.PhoneFilter, cancellationToken);
+            var repoResult = await _productRepository.GetProductListAsync(request.pageNumber, request.pageSize,
+                request.NameFilter, request.ManufactureEmailFilter, request.PhoneFilter);
+
             if(repoResult.Any())
             {
                 return _mapper.Map<List<ProductDTO>>(repoResult);
