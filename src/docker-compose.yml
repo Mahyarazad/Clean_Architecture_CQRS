@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  nadinsoft.api:
+    image: ${DOCKER_REGISTRY-}nadinsoftapi
+    build:
+      context: .
+      dockerfile: NadinSoft.API/Dockerfile
