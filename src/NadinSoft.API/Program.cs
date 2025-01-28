@@ -14,17 +14,34 @@ builder.Services.AddApplicationDependencies()
                 .AddPersistenceDependencies(builder.Configuration)
                 .AddIdentityServices(builder.Configuration)
                 .AddSwagger()
-                .AddHttpConetxt();
+                .AddHttpConetxt()
+                ;
+                //.AddStackExchangeRedisCache(options =>
+                //{
+                //    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+                //    options.InstanceName = "Session";
+                //}).Configure<LoggerFilterOptions>(options => options.AddFilter("StackExchange.Redis", LogLevel.Trace)); ;
 
 builder.Services.AddResponseCompression(options => 
 {
         options.Providers.Add<GzipCompressionProvider>();
-        options.EnableForHttps = true;  
+        //options.EnableForHttps = true;  
 });
 
 builder.Services.Configure<GzipCompressionProviderOptions>(o => o.Level = System.IO.Compression.CompressionLevel.SmallestSize);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("default", builder =>
+    {
+        builder.AllowAnyOrigin();
+        builder.AllowAnyHeader();
+        builder.AllowAnyMethod();
 
+    });
+});
 var app = builder.Build();
+
+//app.UseSession();
 
 if(app.Environment.IsDevelopment())
 {
@@ -52,11 +69,20 @@ else
 }
 
 app.UseIdentity();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseSwaggerDocumentation();
-
+app.UseCors("default");
 
 app.MapControllers();
+
+app.Use(async (context, next) =>
+{
+
+    await next(context);
+
+    // Log response details
+    Console.WriteLine($"Response: {context.Response.StatusCode}");
+});
 
 app.Run();
 
