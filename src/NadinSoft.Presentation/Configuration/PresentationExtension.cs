@@ -6,7 +6,14 @@ namespace NadinSoft.Presentation.Configuration
     {
         public static IServiceCollection AddHttpConetxt(this IServiceCollection services)
         {
+
             services.AddHttpContextAccessor();
+            //services.AddSession(options =>
+            //{
+            //    options.IdleTimeout = TimeSpan.FromMinutes(30);
+            //    options.Cookie.IsEssential = true;
+            //    options.Cookie.HttpOnly = true;
+            //});
             return services;
         }
     }
