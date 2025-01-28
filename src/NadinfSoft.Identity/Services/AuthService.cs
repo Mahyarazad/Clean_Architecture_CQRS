@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -18,11 +19,15 @@ namespace NadinfSoft.Identity.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtSettings _jwtSettings;
-        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<JwtSettings> jwtSettings)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager
+            , IHttpContextAccessor httpContextAccessor
+            , IOptions<JwtSettings> jwtSettings)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtSettings = jwtSettings.Value;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Result<LoginCommandResult>> Login(LoginCommand command, CancellationToken cancellationToken = default)
@@ -33,6 +38,13 @@ namespace NadinfSoft.Identity.Services
             {
                 return Result.Fail("There is no registered username or Email.");
             }
+
+
+            if(userByEmail!.LockoutEnd.HasValue)
+            {
+                return Result.Fail("Your account has been locked due to multiple invalid requets.");
+            }
+
 
             var user = userByEmail != null ? userByEmail : userByUsername;
 
@@ -46,6 +58,9 @@ namespace NadinfSoft.Identity.Services
             if(singInResult.Succeeded)
             {
                 var token = await GenerateJWTToken(user);
+                await _signInManager.SignInAsync(user, false);
+                //_httpContextAccessor.HttpContext.Session.SetString("UserName", user.Email.Split("@")[0]);
+                //_httpContextAccessor.HttpContext.Session.SetString("USer", System.Text.Json.JsonSerializer.Serialize(user));
 
                 return Result.Ok(new LoginCommandResult(user.Id, user.UserName, user.Email, new JwtSecurityTokenHandler().WriteToken(token)));
             }
