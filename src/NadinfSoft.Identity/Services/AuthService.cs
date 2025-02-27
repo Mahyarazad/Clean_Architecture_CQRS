@@ -40,7 +40,7 @@ namespace NadinfSoft.Identity.Services
             }
 
 
-            if(userByEmail!.LockoutEnd.HasValue)
+            if(userByUsername!.LockoutEnd != null)
             {
                 return Result.Fail("Your account has been locked due to multiple invalid requets.");
             }

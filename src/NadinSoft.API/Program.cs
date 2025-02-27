@@ -6,6 +6,7 @@ using NadinfSoft.Identity;
 using NadinfSoft.Identity.Data;
 using NadinSoft.Presentation.Configuration;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,7 +50,7 @@ if(app.Environment.IsDevelopment())
     app.UseSwaggerDocumentation();
     using(var scope = app.Services.CreateScope())
     {
-        using(var context = scope.ServiceProvider.GetService<ApplicationDbContext>()) 
+        using (var context = scope.ServiceProvider.GetService<ApplicationDbContext>()) 
         {
             context!.Database.Migrate();
             context!.Database.EnsureCreated();
@@ -69,7 +70,7 @@ else
 }
 
 app.UseIdentity();
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseSwaggerDocumentation();
 app.UseCors("default");
 

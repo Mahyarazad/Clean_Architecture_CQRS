@@ -64,6 +64,7 @@ namespace NadinSoft.Presentation.Controllers
             , string? phoneFilter, CancellationToken cancellationToken)
         {
             var ipConfig = HttpContext.Connection.RemoteIpAddress;
+            var ip = HttpContext.Request.Headers;
             var sessionId = HttpContext.Request.Cookies[".AspNetCore.Session"];
             if(!string.IsNullOrEmpty(sessionId))
             {

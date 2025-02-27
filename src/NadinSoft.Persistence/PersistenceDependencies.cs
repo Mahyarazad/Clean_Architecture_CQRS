@@ -10,7 +10,7 @@ using NadinSoft.Persistence.Profiles;
 using NadinSoft.Persistence.Repositories;
 using System.Reflection;
 
-namespace NadinSoft.Persistence
+namespace NadinSoft.Persistence 
 {
     public static class PersistenceDependencies
     {
